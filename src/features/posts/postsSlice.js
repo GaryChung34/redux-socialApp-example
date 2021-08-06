@@ -1,8 +1,26 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
 
 const initialState = [
-	{id: '1', title: 'First post!', content: 'Hello', user: '1', date: new Date().toISOString()},
-	{id: '2', title: 'second post.', content: 'here we go.', user: '2', date: new Date().toISOString()}
+	{id: '1', title: 'First post!', content: 'Hello', user: '1', 
+		date: new Date().toISOString(),
+		reactions: {
+			thumbsUp: 0,
+	  	hooray: 0,
+	  	heart: 0,
+	  	rocket: 0,
+	  	eyes: 0
+		}
+	},
+	{id: '2', title: 'second post.', content: 'here we go.', user: '2', 
+		date: new Date().toISOString(),
+		reactions: {
+			thumbsUp: 0,
+	  	hooray: 0,
+	  	heart: 0,
+	  	rocket: 0,
+	  	eyes: 0
+		}
+	}
 ]
 
 const postsSlice = createSlice({
@@ -22,7 +40,14 @@ const postsSlice = createSlice({
 						date: new Date().toISOString(),
 						title,
 						content,
-						user: userId
+						user: userId,
+						reactions: {
+							thumbsUp: 0,
+					  	hooray: 0,
+					  	heart: 0,
+					  	rocket: 0,
+					  	eyes: 0
+						}
 					}
 				}
 			}
@@ -35,6 +60,14 @@ const postsSlice = createSlice({
 				existPost.title = title
 				existPost.content = content
 			}
+		}, 
+
+		reactionAdded(state, action) {
+			const {postId, name} = action.payload
+			const existPost = state.find(post => post.id === postId)
+			if (existPost) {
+				existPost.reactions[name]++
+			}
 		}
 	}
 })
@@ -42,4 +75,4 @@ const postsSlice = createSlice({
 
 export default postsSlice.reducer
 
-export const { postAdded, postUpdated } = postsSlice.actions
+export const { postAdded, postUpdated , reactionAdded } = postsSlice.actions
