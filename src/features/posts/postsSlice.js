@@ -1,4 +1,4 @@
-import { createSlice, nanoid, creatAsyncThunk } from "@reduxjs/toolkit"
+import { createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit"
 import { client } from '../../api/client.js'
 
 
@@ -7,6 +7,12 @@ const initialState = {
 	status: 'idle',
 	error: null
 }
+
+export const fetchPosts = createAsyncThunk('posts/fetchPosts',async () => {
+		const response = await client.get('/fakeApi/posts')
+		return response.posts
+	}
+)
 
 const postsSlice = createSlice({
 	name: 'posts', 
@@ -54,7 +60,7 @@ const postsSlice = createSlice({
 				existPost.reactions[name]++
 			}
 		}
-	}
+	},
 
 	extraReducers: {
 		[fetchPosts.pending]: (state, action) => {
@@ -62,24 +68,19 @@ const postsSlice = createSlice({
 		},
 		[fetchPosts.fulfilled]: (state, action) => {
 			state.posts = state.posts.concat(action.payload)
-			state.status = 'completed'
+			state.status = 'successed'
 		},
 		[fetchPosts.rejected]:  (state, action) => {
-			state.status = 'error'
+			state.status = 'failed'
 			state.error = action.error.message
 		}
 	}
 })
 
-export const fetchPosts = createAsyncThunk('posts/fetchPosts',async () => {
-		const response = await client.get('/fakeAPI/posts')
-		return response
-	}
-)
 
 export const selectAllPosts = state => state.posts.posts
 export const selectPostById = (state, postId) => (
-	state.posts.find(post => post.id === postId)
+	state.posts.posts.find(post => post.id === postId)
 )
 
 export default postsSlice.reducer
