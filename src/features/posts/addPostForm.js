@@ -10,7 +10,7 @@ export const AddPostForm = () => {
 	const [content, setContent] = useState('')
 	const [userId, setUserId] = useState('')
 
-	const users = useSelector(state => state.users)
+	const users = useSelector(state => state.users.users)
 
 	const dispatch = useDispatch()
 
